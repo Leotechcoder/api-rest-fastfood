@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #root {
+            background-color: aquamarine;
+            margin: 0 auto;
+            width: 80%;
+        }
+        article {
+            border: 1px solid #000;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        [data-id] {
+            background-color: #f5f5f5;
+        }
+        article:nth-child(even) {
+            background-color: #ddd;
+        }
+        h2, p {
+            margin: 0;
+        }
+        h2 {
+            font-size: 20px;
+        }
+        p {
+            font-size: 16px;
+        }
+        article:hover {
+            background-color: #ccc;
+        }
+
+    </style>
+    <script>
+        //En este script hago un fetch a la apirest local y traigo los datos de los usuarios
+        fetch('http://localhost:3000/users')
+        .then(response => response.json())
+        .then(
+            users =>
+            {const user = users.map(user => {
+                console.log(user);
+                
+            return `
+            <article data-id="${user.id}">
+                <h2>${user.name}</h2>
+                <p>${user.email}</p>
+                <button>Delete</button>
+            </article>
+            `
+            }).join('')
+
+             document.getElementById('root').innerHTML = user;
+
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', e => {
+                    const article = e.target.parentElement;
+                    const id = article.getAttribute('data-id');
+                    fetch(`http://localhost:3000/users/${id}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => response.json())
+                    .then(res => {
+                        if(res.ok){
+                         article.remove()   
+                        }
+                    })
+                })
+            })
+        }
+        )
+        
+
+
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>
