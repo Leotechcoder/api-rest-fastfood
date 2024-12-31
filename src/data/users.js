@@ -1,5 +1,5 @@
 // users.js
-export const users = [
+export const users =  [
     {
       id: 101,
       name: "Juan Pérez",
@@ -25,6 +25,3 @@ export const users = [
       registrationDate: "2024-12-01T18:45:00Z"
     }
   ];
-  
- 
-  

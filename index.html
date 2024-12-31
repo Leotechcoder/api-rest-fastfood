@@ -53,25 +53,52 @@
             `
             }).join('')
 
-             document.getElementById('root').innerHTML = user;
+            document.getElementById('root').innerHTML = user;
 
-            document.querySelectorAll('button').forEach(button => {
-                button.addEventListener('click', e => {
-                    const article = e.target.parentElement;
-                    const id = article.getAttribute('data-id');
-                    fetch(`http://localhost:3000/users/${id}`, {
-                        method: 'DELETE'
-                    })
-                    .then(response => response.json())
-                    .then(res => {
-                        if(res.ok){
-                         article.remove()   
-                        }
-                    })
-                })
-            })
-        }
-        )
+           
+
+           // Obtener todos los botones y asignar el evento
+        document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            try {
+            // Obtener el elemento del artículo
+            const article = e.target.closest('[data-id]'); // Uso de `closest` para obtener el elemento más cercano con el atributo
+            if (!article) {
+                console.error('No se pudo encontrar el artículo asociado al botón.');
+                return;
+            }
+
+            console.log(article);
+
+            // Obtener el ID del artículo
+            const id = article.getAttribute('data-id');
+            console.log(`ID obtenido: ${id}`);
+
+            // Eliminar el artículo del DOM
+            document.getElementById('root').removeChild(article);
+
+            // Realizar la solicitud DELETE al servidor
+            const response = await fetch(`http://localhost:3000/users/${id}`, {
+                method: 'DELETE', // Método HTTP correcto
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id }) // Enviar el ID en el cuerpo de la solicitud
+            });
+
+            // Verificar si la solicitud fue exitosa
+            if (!response.ok) {
+                console.error(`Error al eliminar el usuario: ${response.status} - ${response.statusText}`);
+                return;
+            }
+
+            console.log('Usuario eliminado correctamente del servidor.');
+            } catch (error) {
+            console.error('Ocurrió un error al intentar eliminar el usuario:', error);
+            }
+        });
+        });
+})
         
 
 

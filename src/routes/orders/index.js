@@ -1,23 +1,22 @@
-import express from 'express';
-import products from '../../data/products';
-const app = express();
+//Archivo que contiene las rutas de la entidad orders
+// para obtener, crear, actualizar y eliminar ordenes
 
-app.use(express.json());
+import { Router } from 'express';
+import { OrdersController } from '../../controllers/orders.js';
 
-app.disable('x-powered-by');
+export const routerOrders = Router();
 
-const port = process.env.PORT?? 3000;
+//obtener todas las ordenes
+routerOrders.get('/', OrdersController.getOrders);
 
-const products = app.get('/products', (req, res) => {    
-    res.json(products);
-});
+//Obtener una orden por id
+routerOrders.get('/:id', OrdersController.getOrderById);
 
+//Crear una orden
+routerOrders.post('/', OrdersController.createOrder);
 
+//Actualizar parcialmente una orden
+routerOrders.patch('/:id', OrdersController.updatePartialOrder);
 
-
-
-app.listen(port, () => {
-    console.log(`Server running on port http://localhost:${port}`);
-});
-
-export default products;
+//Eliminar una orden
+routerOrders.delete('/:id', OrdersController.deleteOrder);
